@@ -17,6 +17,11 @@ export const CONFIG = Object.freeze( {
     colors: [ 'red', 'yellow', 'cyan', 'magenta', 'hotpink', 'green' ], // una por fila
     points: 10,
   },
+  sounds: {
+    break: 'assets/sounds/break-sound.mp3',
+    bounce: 'assets/sounds/ball-bounce.mp3',
+  },
+  explosion: { duration: EXPLOSION_DURATION }, // ms, global de spritesheet.js
   lives: 3,
   storageKey: 'arkanoid:highscore:v1',
 } );
