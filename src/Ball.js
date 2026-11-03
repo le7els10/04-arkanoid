@@ -1,10 +1,11 @@
 export class Ball {
-  constructor( { size, initialSpeed, speedStep, maxSpeedFactor } ) {
+  constructor( { size, speedStep, maxSpeedFactor } ) {
     this.size = size;
-    this.initialSpeed = initialSpeed;
     this.speedStep = speedStep;
-    this.maxSpeed = initialSpeed * maxSpeedFactor;
-    this.speed = initialSpeed;
+    this.maxSpeedFactor = maxSpeedFactor;
+    this.initialSpeed = 0; // lo fija cada nivel con setInitialSpeed()
+    this.maxSpeed = 0;
+    this.speed = 0;
     this.x = 0;
     this.y = 0;
     this.vx = 0;
@@ -46,6 +47,12 @@ export class Ball {
   setVelocity( { vx, vy } ) {
     this.vx = vx;
     this.vy = vy;
+  }
+
+  // No cambia la velocidad actual: se aplica con el siguiente resetSpeed().
+  setInitialSpeed( speed ) {
+    this.initialSpeed = speed;
+    this.maxSpeed = speed * this.maxSpeedFactor;
   }
 
   resetSpeed() {
