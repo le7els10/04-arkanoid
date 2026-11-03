@@ -1,20 +1,39 @@
 import { Brick } from './Brick.js';
 import { intersects } from './Collision.js';
 
+const BRICK = '#';
+const EMPTY = '.';
+
 export class BrickGrid {
-  constructor( { rows, cols, width, height, gap, offsetTop, offsetLeft, colors } ) {
+  constructor( { cols, width, height, gap, offsetTop, offsetLeft, colors } ) {
+    this.cols = cols;
+    this.width = width;
+    this.height = height;
+    this.gap = gap;
+    this.offsetTop = offsetTop;
+    this.offsetLeft = offsetLeft;
+    this.colors = colors;
     this.bricks = [];
-    for ( let row = 0; row < rows; row++ ) {
-      for ( let col = 0; col < cols; col++ ) {
-        const x = offsetLeft + col * ( width + gap );
-        const y = offsetTop + row * ( height + gap );
-        this.bricks.push( new Brick( x, y, width, height, colors[ row % colors.length ] ) );
-      }
-    }
   }
 
-  reset() {
-    this.bricks.forEach( brick => { brick.alive = true; } );
+  // Sustituye todos los bloques por los del layout: un string por fila, '#' = bloque, '.' = hueco.
+  load( layout ) {
+    const bricks = [];
+    layout.forEach( ( line, row ) => {
+      if ( line.length !== this.cols ) {
+        throw new Error( `BrickGrid: la fila ${ row } mide ${ line.length } caracteres y debe medir ${ this.cols }` );
+      }
+      [ ...line ].forEach( ( cell, col ) => {
+        if ( cell === EMPTY ) return;
+        if ( cell !== BRICK ) {
+          throw new Error( `BrickGrid: carácter inválido '${ cell }' en la fila ${ row }, columna ${ col }` );
+        }
+        const x = this.offsetLeft + col * ( this.width + this.gap );
+        const y = this.offsetTop + row * ( this.height + this.gap );
+        bricks.push( new Brick( x, y, this.width, this.height, this.colors[ row % this.colors.length ] ) );
+      } );
+    } );
+    this.bricks = bricks;
   }
 
   // Primer bloque vivo que toca el rectángulo dado, o null.

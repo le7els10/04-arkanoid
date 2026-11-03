@@ -34,22 +34,26 @@ export class Renderer {
     }
   }
 
-  drawHud( scoreBoard ) {
+  drawHud( scoreBoard, levelNumber ) {
     const { ctx } = this;
     const { width } = this.config.canvas;
     const hudHeight = this.config.hud.height;
     const textY = hudHeight / 2;
 
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 16px monospace';
+    ctx.font = 'bold 14px monospace';
     ctx.textBaseline = 'middle';
-
-    ctx.textAlign = 'left';
-    ctx.fillText( `PUNTOS ${ scoreBoard.score }`, 12, textY );
     ctx.textAlign = 'center';
-    ctx.fillText( `RÉCORD ${ scoreBoard.highScore }`, width / 2, textY );
-    ctx.textAlign = 'right';
-    ctx.fillText( `VIDAS ${ scoreBoard.lives }`, width - 12, textY );
+
+    // 4 columnas de igual ancho, cada texto centrado en la suya.
+    const items = [
+      `PUNTOS ${ scoreBoard.score }`,
+      `NIVEL ${ levelNumber }`,
+      `RÉCORD ${ scoreBoard.highScore }`,
+      `VIDAS ${ scoreBoard.lives }`,
+    ];
+    const columnWidth = width / items.length;
+    items.forEach( ( text, i ) => ctx.fillText( text, columnWidth * ( i + 0.5 ), textY ) );
 
     ctx.fillStyle = '#444';
     ctx.fillRect( 0, hudHeight - 2, width, 2 );

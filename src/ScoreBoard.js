@@ -1,9 +1,9 @@
 export class ScoreBoard {
   // highScoreStore: cualquier objeto con load(): number y save( score: number ): void.
-  constructor( highScoreStore, { lives, points } ) {
+  constructor( highScoreStore, { lives } ) {
     this.store = highScoreStore;
     this.initialLives = lives;
-    this.pointsPerBrick = points;
+    this.pointsPerBrick = 0; // lo fija cada nivel con setPointsPerBrick()
     this.highScore = this.store.load();
     this.reset();
   }
@@ -12,6 +12,10 @@ export class ScoreBoard {
     this.score = 0;
     this.lives = this.initialLives;
     this.bricksBroken = 0;
+  }
+
+  setPointsPerBrick( points ) {
+    this.pointsPerBrick = points;
   }
 
   addBrick() {

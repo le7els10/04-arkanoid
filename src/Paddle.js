@@ -1,6 +1,6 @@
 export class Paddle {
-  constructor( { width, height, speed }, y ) {
-    this.width = width;
+  constructor( { height, speed }, y ) {
+    this.width = 0; // lo fija cada nivel con setWidth()
     this.height = height;
     this.speed = speed;
     this.x = 0;
@@ -9,6 +9,10 @@ export class Paddle {
 
   get centerX() {
     return this.x + this.width / 2;
+  }
+
+  setWidth( width ) {
+    this.width = width;
   }
 
   centerAt( x ) {
