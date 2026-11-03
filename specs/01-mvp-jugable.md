@@ -67,7 +67,7 @@ export const CONFIG = {
   paddle: { width: 96, height: 14, speed: 420, bottomOffset: 40 },   // speed en px/s
   ball: {
     size: 12,
-    initialSpeed: 300,          // px/s
+    initialSpeed: 400,          // px/s
     speedStep: 0.05,            // +5%
     bricksPerStep: 10,
     maxSpeedFactor: 1.6,
@@ -202,7 +202,7 @@ new Game({ renderer, input, scoreBoard, paddle, ball, brickGrid, config: CONFIG 
 | --- | --- |
 | Los ES modules no cargan con `file://` (CORS) | Servir siempre la raíz por HTTP (`npx serve .` o `python -m http.server`), como ya indica `CLAUDE.md`. |
 | `src/main.js` se ejecuta antes de que existan los globales de `spritesheet.js` | El `<script>` clásico va antes del `type="module"`. Los módulos se difieren, así que los globales ya existen. |
-| Efecto túnel: la pelota atraviesa un bloque o la paleta con un `dt` grande | `dt` limitado a 1/30 s. A 480 px/s son unos 16 px por frame, igual que la altura de un bloque. |
+| Efecto túnel: la pelota atraviesa un bloque o la paleta con un `dt` grande | `dt` limitado a 1/30 s. A la velocidad máxima de 640 px/s son unos 21 px por frame. Es menos que la ventana de choque con un bloque (16 + 12 = 28 px) y con la paleta (14 + 12 = 26 px). |
 | La pelota se queda atrapada rebotando dentro de la paleta | Al rebotar en la paleta se fuerza `vy < 0` y la pelota se recoloca justo encima de la paleta. |
 | La pelota entra en un bucle casi horizontal | El rebote en la paleta limita el ángulo a 60° respecto a la vertical. |
 | `localStorage` lanza una excepción (modo privado o datos bloqueados) | `HighScoreStore` envuelve las lecturas y escrituras en `try/catch` y recurre a memoria. |
