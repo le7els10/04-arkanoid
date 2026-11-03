@@ -6,6 +6,8 @@ import { Ball } from './Ball.js';
 import { BrickGrid } from './BrickGrid.js';
 import { HighScoreStore } from './HighScoreStore.js';
 import { ScoreBoard } from './ScoreBoard.js';
+import { ExplosionSystem } from './ExplosionSystem.js';
+import { SoundPlayer } from './SoundPlayer.js';
 import { Game } from './Game.js';
 
 // Raíz de composición: único sitio donde se crean las dependencias.
@@ -24,6 +26,8 @@ loadSpritesheet( () => {
     paddle: new Paddle( CONFIG.paddle, paddleY ),
     ball: new Ball( CONFIG.ball ),
     brickGrid: new BrickGrid( CONFIG.bricks ),
+    explosions: new ExplosionSystem( CONFIG.explosion ),
+    sound: new SoundPlayer( CONFIG.sounds, src => new Audio( src ) ),
     config: CONFIG,
   } );
 

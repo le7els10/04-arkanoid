@@ -26,6 +26,14 @@ export class Renderer {
     }
   }
 
+  drawExplosions( explosionSystem ) {
+    for ( const explosion of explosionSystem.explosions ) {
+      const frames = EXPLOSION_FRAMES[ explosion.color ];
+      const frame = frames[ explosion.frameIndex( frames.length ) ];
+      drawFrame( this.ctx, frame, explosion.x, explosion.y, explosion.width, explosion.height );
+    }
+  }
+
   drawHud( scoreBoard ) {
     const { ctx } = this;
     const { width } = this.config.canvas;

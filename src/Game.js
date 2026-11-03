@@ -10,13 +10,15 @@ export const GameState = Object.freeze( {
 const MAX_DT = 1 / 30; // evita túneles tras cambiar de pestaña
 
 export class Game {
-  constructor( { renderer, input, scoreBoard, paddle, ball, brickGrid, config } ) {
+  constructor( { renderer, input, scoreBoard, paddle, ball, brickGrid, explosions, sound, config } ) {
     this.renderer = renderer;
     this.input = input;
     this.scoreBoard = scoreBoard;
     this.paddle = paddle;
     this.ball = ball;
     this.brickGrid = brickGrid;
+    this.explosions = explosions;
+    this.sound = sound;
     this.config = config;
 
     this.state = GameState.START;
@@ -41,6 +43,8 @@ export class Game {
   }
 
   update( dt ) {
+    this.explosions.update( dt ); // en todos los estados: la última explosión se ve completa al ganar
+
     if ( this.state === GameState.PLAYING ) {
       this.updatePlaying( dt );
     } else if ( this.input.wasPressed( 'Space' ) ) {
@@ -51,6 +55,7 @@ export class Game {
   newGame() {
     this.scoreBoard.reset();
     this.brickGrid.reset();
+    this.explosions.clear();
     this.startRound();
     this.state = GameState.PLAYING;
   }
@@ -73,10 +78,18 @@ export class Game {
     this.movePaddle( dt );
     this.ball.update( dt );
 
+    const before = { vx: this.ball.vx, vy: this.ball.vy };
     this.handleWalls();
     this.handlePaddle();
+    if ( this.didBounce( before ) ) this.sound.play( 'bounce' );
+
     this.handleBricks();
     this.handleFall();
+  }
+
+  // Hubo rebote si cambió el signo de alguna componente de la velocidad.
+  didBounce( { vx, vy } ) {
+    return Math.sign( vx ) !== Math.sign( this.ball.vx ) || Math.sign( vy ) !== Math.sign( this.ball.vy );
   }
 
   movePaddle( dt ) {
@@ -110,6 +123,8 @@ export class Game {
 
     this.ball.setVelocity( brickBounceVelocity( this.ball, brick ) );
     brick.break();
+    this.explosions.spawn( brick );
+    this.sound.play( 'break' );
     this.scoreBoard.addBrick();
 
     this.bricksThisLife++;
@@ -133,6 +148,7 @@ export class Game {
     const { renderer, scoreBoard } = this;
     renderer.clear();
     renderer.drawBricks( this.brickGrid );
+    renderer.drawExplosions( this.explosions );
     renderer.drawPaddle( this.paddle );
     if ( this.state !== GameState.GAME_OVER ) renderer.drawBall( this.ball );
     renderer.drawHud( scoreBoard );
